@@ -10,7 +10,7 @@ const createOrder = async (req: Request, res: Response) => {
       await OrderServices.createOrderIntoDb(orderData);
 
     
-    res.status(200).json({
+     res.status(200).json({
       message: 'Order created successfully',
       success: true,
       data: result,

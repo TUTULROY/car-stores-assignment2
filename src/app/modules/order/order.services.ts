@@ -8,7 +8,7 @@ import { OrderModel } from "./order.model";
 const createOrderIntoDb = async (order: Order) => {
   const { car, quantity } = order;
 
-  // Find the car in inventory
+
   const carData = await CarModel.findById(car);
 
   if (!carData) {
@@ -24,14 +24,14 @@ const createOrderIntoDb = async (order: Order) => {
     throw new Error("Insufficient stock");
   }
 
-  // Reduce the quantity and update inStock flag
+  
   carData.quantity -= quantity;
   if (carData.quantity === 0) {
     carData.inStock = false;
   }
   await carData.save();
 
-  // Create the order
+  
   const result = await OrderModel.create(order);
 
   return result;
@@ -41,7 +41,7 @@ const calculateRevenue = async () => {
   const revenue = await OrderModel.aggregate([
     {
       $lookup: {
-        from: "cars", // Collection for car models
+        from: "cars", 
         localField: "car",
         foreignField: "_id",
         as: "carDetails",
@@ -52,8 +52,8 @@ const calculateRevenue = async () => {
     },
     {
       $project: {
-        quantity: { $toDouble: "$quantity" }, // Ensure quantity is a number
-        carPrice: { $toDouble: "$carDetails.price" }, // Ensure price is a number
+        quantity: { $toDouble: "$quantity" }, 
+        carPrice: { $toDouble: "$carDetails.price" }, 
       },
     },
     {
